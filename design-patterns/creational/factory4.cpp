@@ -1,10 +1,16 @@
 // Factory pattern
 // Principle #3: when you have an interface and 2 or more base classes, having a factory
-//               to create these objects allows for additional decopling between client class
+//               to create these objects allows for additional decoupling between client class
 //               and these different base classes
 //
 // link: https://www.youtube.com/watch?v=BPkYkyVWOaw
 //
+// **** use case **** [ inheritance ]
+// -- want to create one of sub-classes which share same base class
+// -- client code can operate on base class pointer
+// -- we can have factory class provide apis to create each base class
+// -- factory->get_obj_subclass1(); factory->get_obj_subclass2();...
+// -- client code is decoupled from the details of creating these objects
 
 #include <iostream>
 #include <string>

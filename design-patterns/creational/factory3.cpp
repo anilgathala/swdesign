@@ -17,6 +17,11 @@
 //  -- create a file obj based on data file path (read, write)
 //  -- create a file obj based on log file path (append only)
 
+// **** use case **** [ there is no inheritance here]
+// -- you want to use a customized version of an object
+// -- either the client code can create by passing adjusted parameters to constructor, or
+// -- we can have factory class provide an api to get this customized object, so client doesn't depend on it
+
 #include <iostream>
 #include <string>
 #include <sys/types.h>

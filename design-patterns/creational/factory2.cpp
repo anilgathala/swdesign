@@ -21,6 +21,17 @@
 //        you simply extend the abstract-client-class with specific implmenetation of the create_utility_object
 // Lastly, have a method which takes an input string/int and creates the appropriate client-class based on the input
 
+// **** use case ****
+// -- we want to use a component which uses two or more utilities / modes within 
+// -- one way to do this is - pass a flag and have component use the right utility / mode
+// -- or, have multiple versions of component (derived from a base class) and use the right sub-class
+// -- that way your code which is using the component doesn't have to change each time
+// -- your using it
+// -- in the code below: main() uses FTA, sometimes with zlib and sometimes with brotli
+// -- you can have ZlibFTA and BrotliFTA --> you do not have to pass a flag, code is cleaner
+// -- also if your code is passed a "FTP" base class pointer, your code will be completely
+// -- decoupled from type of FTA you're passed
+
 #include <iostream>
 #include <string>
 #include <atomic>
@@ -154,5 +165,12 @@ int main()
     zlib_fta->send("power_consumption_data.txt");
     std::cout << " --------- " << std::endl;
     brotli_fta->send("cpu_load_metrics.txt");
+
+    // just using a generic ptr
+    // now this code takes "FileTransferAgent*" as a parameter, then this code
+    // would be completely decoupled from type of FTA
+    FileTransferAgent* fta = new BrotliFTA();
+    fta->send("io_metrics.txt");
+
     return 0;
 }
