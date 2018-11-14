@@ -1,0 +1,79 @@
+How to use creational patterns ?
+
+Basic Situation: so a client code would like to create an obj and use it.
+- well, you can use "new", get a pointer and roll from there...
+- the following offer scenarios in which you'd like to take other approaches
+
+*** Builder design pattern ***
+
+Spcial situation #1: [builder design pattern - incremental building]
+- we have a class whose object can't be built in one constructor call
+- create a builder class and provide "addField#1", "addField#2".. methods
+-- so client code can incrementally build the object
+-- example: builder.addField#1(..).addField#2(..).get_obj();
+
+Spcial situation #2: [builder design pattern - incremental building]
+- client code needs to create an obj and use it
+- building this obj has multiple phases
+- also, in future the specific obj client operates can change
+- create an interface for such objects
+- create a builder interface and create different builders
+- now, client code is passed a builder and it calls builder.phase1(), builder.phase2()
+- without worrying about which specific build variation we're building 
+- having a class interface for objects helps to keep all builders to be generic
+-- (and not specific to a particular obj variation)
+
+
+*** Factory Deisgn Pattern ***
+
+Special situation#1: [factory design pattern without a factory method or class - just inheritance]
+- the object you're trying to use comes in two variations (uses two different underlying utilities)
+- [A bad solution] so you need to pass a flag to get the right kind of object
+--- (e.g., FileTransferAgent with Zlib or Brotli - compression_flag)
+- [Problem] this results in a tight coupling between client code and the class we're using
+--- client code needs to change, each time you create a new variation of the class (new compression type for example)
+- [solution] define base class (FileTransferAgent) and create subclasses for each variation (e.g., ZlibFTA, BrotliFTA)
+--- have a connecting code which declares the right kind of class/instance (ZlibFTA/BrotliFTA) based on a config flag or something
+--- client just operates on FileTransferAgent* and doesn't have to change each time we add a new compression algo
+--- this we reduced the coupling between client code and FileTransferAgent.
+
+Special situation#2: [factory class/method with inheritance]
+- we have a base class and set of inherited classes (subclasses)
+- client code would like to create and use one of the subclasses
+- having a factory method with get_obj(class_type_name) will make it easier for the client
+--- to just operate on base class pointer (there by less coupling)
+
+Special situation#1 and situation#2 -- almost equivalent, #2 is a tiny bit step up with the factory class/method
+- basic idea is to have client code operate on base class pointer
+- and pass appropriate subclass to client code
+
+*** Abstract Factory Deisgn Pattern ***
+
+Special Situation#1: [factory of factories]
+- client code creates a number of objects
+- rather than have client code depend on specific factory(ies) to build each variation of obj
+- you can instead have an abstract factory which will have method get_factory(factory_name)
+- now, client code can do:
+--- f = AbstractFactory::get_factory(factory_name);
+--- obj = f->get_obj(variation_of_obj);
+- more abstraction... (people say this is theoretical)
+
+*** Prototype Deisgn Pattern ***
+
+Special situation#1: [cache frequently used config-type instances, clone a new instance from cache when needed]
+- client code wants to create a large number os instances of a class, but different categories of preset-configs
+- your code implement a cache where client do this:  obj = cache_->get_obj(category_type); and customize obj further if needed
+-  this caching is useful if it is more beneficial to do so compared to creating obj from scratch
+- for example, may be we need to read a file or go over network to understand how to initialize the obj
+
+*** Singleton Deisgn Pattern ***
+
+Special situation#1: [only one instance should run, client code cannot create more than one instance]
+- let's say you have a system service/db which provides a service to the client code
+- there is no issue scaling here, we just need to unify access to a resource(s) via this single service
+- in this case, we create a singleton class (one instance only)
+- have client code, do singleton_obj = get_instance(); and use it like this singleton_obj->get_work_done();
+
+
+
+
